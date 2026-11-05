@@ -91,6 +91,7 @@ jobs:
           repository: alliedmodders/metamod-source
           ref: ${{ matrix.meta_branch }}
           path: mmsource
+          submodules: recursive
 
       - name: Fetch SourceMod ${{ matrix.sm_branch }}
         uses: actions/checkout@v4
