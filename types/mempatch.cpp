@@ -1,8 +1,13 @@
 #include "extension.h"
 #include "mempatch.h"
 
+#if !defined(SOURCESCRAMBLE_USE_KHOOK)
 #include <sourcehook.h>
 #include <sh_memory.h>
+#else
+#include <khook.hpp>
+#include <khook/memory.hpp>
+#endif
 
 #include <am-vector.h>
 
@@ -51,8 +56,13 @@ public:
 		}
 		ByteVectorRead(vecRestore, (uint8_t*) pAddress, vecPatch.size());
 		
+	#if !defined(SOURCESCRAMBLE_USE_KHOOK)
 		SourceHook::SetMemAccess((void*) this->pAddress, vecPatch.size() * sizeof(uint8_t),
 				SH_MEM_READ | SH_MEM_WRITE | SH_MEM_EXEC);
+	#else
+		KHook::Memory::SetAccess((void*) this->pAddress, vecPatch.size() * sizeof(uint8_t),
+				KHook::Memory::Flags::READ | KHook::Memory::Flags::WRITE | KHook::Memory::Flags::EXECUTE);
+	#endif
 		ByteVectorWrite(vecPatch, (uint8_t*) pAddress);
 		
 		for (size_t i = 0; i < vecPatch.size(); i++) {

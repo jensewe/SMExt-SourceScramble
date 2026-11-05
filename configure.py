@@ -26,4 +26,5 @@ parser.options.add_argument('--targets', type=str, dest='targets', default=None,
 parser.options.add_argument('--spcomp-path', type=str, dest='spcomp_path', default=None,
                        help='Path to directory containing spcomp')
 parser.options.add_argument('--no-plugins', action='store_true', help='Do not compile plugins')
+parser.options.add_argument('--use-khook', action='store_true', dest='use_khook', help='Compile with KHook')
 parser.Configure()

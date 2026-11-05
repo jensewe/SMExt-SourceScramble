@@ -3,8 +3,13 @@
 
 #include <cstdlib>
 
+#if !defined(SOURCESCRAMBLE_USE_KHOOK)
 #include <sourcehook.h>
 #include <sh_memory.h>
+#else
+#include <khook.hpp>
+#include <khook/memory.hpp>
+#endif
 
 HandleType_t g_MemoryBlockType = 0;
 
@@ -12,8 +17,13 @@ struct MemoryBlock {
 	MemoryBlock(size_t size) : size{size}, disowned{false} {
 		this->block = calloc(size, 1);
 		
+	#if !defined(SOURCESCRAMBLE_USE_KHOOK)
 		SourceHook::SetMemAccess((void*) this->block, size * sizeof(uint8_t),
 				SH_MEM_READ | SH_MEM_WRITE | SH_MEM_EXEC);
+	#else
+		KHook::Memory::SetAccess((void*) this->block, size * sizeof(uint8_t),
+				KHook::Memory::Flags::READ | KHook::Memory::Flags::WRITE | KHook::Memory::Flags::EXECUTE);
+	#endif
 	}
 	
 	~MemoryBlock() {
