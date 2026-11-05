@@ -332,18 +332,11 @@ class ExtensionConfig(ScriptingMixin, object):
       os.path.join(self.mms_root, 'core'),
     ]
 
-    sourcemm_hooks = {
-      'sourcehook.h' :  os.path.join(self.mms_root, 'core', 'sourcehook'),
-      'khook.hpp' : os.path.join(self.mms_root, 'third_party', 'khook', 'include'),
-    }
-
-    for file, path in sourcemm_hooks.items():
-      if os.path.exists(os.path.join(path, file)):
-        compiler.cxxincludes += [path]
-
-    if builder.options.use_khook:
-      print('builder.options.use_khook')
+    if os.path.exists(os.path.join(self.mms_root, 'third_party', 'khook', 'include', 'khook.hpp')):
+      compiler.cxxincludes += [os.path.join(self.mms_root, 'third_party', 'khook', 'include')]
       compiler.defines += ['SOURCESCRAMBLE_USE_KHOOK']
+    elif os.path.exists(os.path.join(self.mms_root, 'core', 'sourcehook', 'sourcehook.h')):
+      compiler.cxxincludes += [os.path.join(self.mms_root, 'core', 'sourcehook')]
 
     compiler.defines += ['META_NO_HL2SDK']
     return binary
